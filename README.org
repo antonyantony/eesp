@@ -1,0 +1,26 @@
+#+TITLE: README for EESP Internet Draft
+#+AUTHOR: Antony Antony
+#+DATE: December 6, 2024
+
+This is the working area for the individual Internet-Draft, "EESP IKEv2".
+
+* Introduction
+This README provides information about the Enhanced Encapsulating
+Security Payload (EESP) IKEv2 draft document.
+
+* Latest Copy
+The latest version of the draft in HTML format is at:
+- [[https://klassert.github.io/eesp/draft-ietf-ipsecme-eesp-latest.html][Editor's Copy]]
+# above URL, hostnmae, is replaced by .github/workflows/generate.yaml
+# sed -i "s|klassert.github.io/eesp|$USERNAME.github.io/$REPO_NAME|g"
+
+* IETF Datatracker Page of EESP I.D.
+- [[https://datatracker.ietf.org/doc/draft-ietf-ipsecme-eesp/][IETF Datatracker: draft-ietf-ipsecme-eesp]]
+
+- [[https://author-tools.ietf.org/api/iddiff?doc_1=draft-ietf-ipsecme-eesp&url_2=https://raw.githubusercontent.com/klassert/eesp/refs/heads/gh-pages/draft-ietf-ipsecme-eesp-latest.txt][Diff with last submission]]
+
+* References
+For more detailed information, refer to the following resources:
+- [[https://klassert.github.io/eesp-ikev2/draft-klassert-ipsecme-eesp-ikev2-latest.html][EESP IKEv2 Editor's Copy]]
+
+- [[https://datatracker.ietf.org/doc/draft-klassert-ipsecme-eesp-ikev2][IETF Datatracker: draft-ietf-ipsecme-eesp-ikev2]]
