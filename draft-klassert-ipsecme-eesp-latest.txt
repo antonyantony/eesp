@@ -132,15 +132,14 @@ Internet-Draft                    EESP                     December 2024
    6.  IKEv2 Negotiation . . . . . . . . . . . . . . . . . . . . . .  28
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  28
      7.1.  EESP IP Protocol Number . . . . . . . . . . . . . . . . .  28
-     7.2.  EESP Versions Registry  . . . . . . . . . . . . . . . . .  28
-     7.3.  EESP Options Registry . . . . . . . . . . . . . . . . . .  28
-   8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  29
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  30
-   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  30
-   11. Normative References  . . . . . . . . . . . . . . . . . . . .  30
+     7.2.  EESP Options Registry . . . . . . . . . . . . . . . . . .  28
+   8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  28
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  29
+   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  29
+   11. Normative References  . . . . . . . . . . . . . . . . . . . .  29
    12. Informative References  . . . . . . . . . . . . . . . . . . .  30
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  32
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  32
+   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  31
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
 
 1.  Introduction
 
@@ -162,6 +161,7 @@ Internet-Draft                    EESP                     December 2024
    This document defines Flow Identifier and Crypt Offset Options, the
    combination thereof along with the Session ID can be used for the PSP
    use case.  Future documents can define the meaning of additional
+   Options for their particular use-case.  With this, all existing and
 
 
 
@@ -170,7 +170,6 @@ Klassert, et al.          Expires 15 June 2025                  [Page 3]
 Internet-Draft                    EESP                     December 2024
 
 
-   Options for their particular use-case.  With this, all existing and
    potential new use cases can be covered.  For instance, it can be used
    for the case of [I-D.ponchon-ipsecme-anti-replay-subspaces] or
    [I-D.he-ipsecme-vpn-shared-ipsecsa] etc., or combinations thereof.
@@ -218,6 +217,7 @@ Internet-Draft                    EESP                     December 2024
 
    This document uses the following terms defined in
    [I-D.mrossberg-ipsecme-multiple-sequence-counters]: Sub-Child SA.
+
 
 
 
@@ -1533,42 +1533,12 @@ Internet-Draft                    EESP                     December 2024
 
    *  Reference: This document
 
-7.2.  EESP Versions Registry
-
-   This document requests IANA to create a registry called
-   "EESP_VERSIONS" Type Registry" under a new category named
-   "EESP_VERSIONS Parameters".
-
-   *  Name: EESP Versions Registry
-
-   *  Description: EESP Base Header Version
-
-   *  Reference: This document
-
-   The initial content for this registry is as follows:
-
-   Value     EESP Header Options Types         Reference
-   -------   ------------------------------    ---------------
-         0   Unassigned                      [this document]
-         1   FOO                             [this document]
-   2-127   Private                           [this document]
-
-              Figure 21: EESP Version Initial Registry Values
-
-7.3.  EESP Options Registry
+7.2.  EESP Options Registry
 
    This document requests IANA to create a registry called "EESP_OPTIONS
    Type Registry" under a new category named "EESP_OPTIONS Parameters".
 
    *  Name: EESP Options Registry
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 28]
-
-Internet-Draft                    EESP                     December 2024
-
 
    *  Description: EESP Base Header Options
 
@@ -1585,12 +1555,20 @@ Internet-Draft                    EESP                     December 2024
      4-223   Unassigned                        [this document]
    224-255   Private                           [this document]
 
-                     Figure 22: Initial Registry Values
+                     Figure 21: Initial Registry Values
 
 8.  Implementation Status
 
    [Note to RFC Editor: Please remove this section and the reference to
    [RFC7942] before publication.]
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 28]
+
+Internet-Draft                    EESP                     December 2024
+
 
    This section records the status of known implementations of the
    protocol defined by this specification at the time of posting of this
@@ -1616,16 +1594,6 @@ Internet-Draft                    EESP                     December 2024
    this section, advising the Editor to remove the entire section before
    publication, as well as the reference to [RFC7942].
 
-
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 29]
-
-Internet-Draft                    EESP                     December 2024
-
-
 9.  Security Considerations
 
    In this section we discuss the security properties of EESP: TBD
@@ -1649,6 +1617,15 @@ Internet-Draft                    EESP                     December 2024
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <https://www.rfc-editor.org/info/rfc4303>.
 
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 29]
+
+Internet-Draft                    EESP                     December 2024
+
+
    [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
               Kivinen, "Internet Key Exchange Protocol Version 2
               (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
@@ -1671,16 +1648,6 @@ Internet-Draft                    EESP                     December 2024
               IANA, "IKEv2 Parameters",
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml#ikev2-parameters-5>.
-
-
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 30]
-
-Internet-Draft                    EESP                     December 2024
-
 
    [I-D.he-ipsecme-vpn-shared-ipsecsa]
               He, Q., Pan, W., Chen, X., and B. Ding, "Shared Use of
@@ -1707,6 +1674,14 @@ Internet-Draft                    EESP                     December 2024
               <https://datatracker.ietf.org/doc/html/draft-ponchon-
               ipsecme-anti-replay-subspaces-03>.
 
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 30]
+
+Internet-Draft                    EESP                     December 2024
+
+
    [NIST01]   NIST, "Federal Information Processing Standards
               Publication 140-2 (FIPS PUB 140-2), "Security Requirements
               for Cryptographic Modules", Information Technology
@@ -1729,14 +1704,6 @@ Internet-Draft                    EESP                     December 2024
               Code: The Implementation Status Section", BCP 205,
               RFC 7942, DOI 10.17487/RFC7942, July 2016,
               <https://www.rfc-editor.org/info/rfc7942>.
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 31]
-
-Internet-Draft                    EESP                     December 2024
-
 
 Appendix A.  Additional Stuff
 
@@ -1766,27 +1733,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 32]
+Klassert, et al.          Expires 15 June 2025                 [Page 31]
