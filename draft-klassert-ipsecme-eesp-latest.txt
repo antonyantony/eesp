@@ -88,14 +88,14 @@ Table of Contents
      2.1.  EESP packet format  . . . . . . . . . . . . . . . . . . .   5
      2.2.  Base Header . . . . . . . . . . . . . . . . . . . . . . .   6
        2.2.1.  Fixed Base Header . . . . . . . . . . . . . . . . . .   6
-       2.2.2.  Base Header Options . . . . . . . . . . . . . . . . .   7
+       2.2.2.  Base Header Options . . . . . . . . . . . . . . . . .   8
      2.3.  Peer Header . . . . . . . . . . . . . . . . . . . . . . .   8
        2.3.1.  Sequence Number . . . . . . . . . . . . . . . . . . .   9
-       2.3.2.  Initialization Vector . . . . . . . . . . . . . . . .   9
+       2.3.2.  Initialization Vector . . . . . . . . . . . . . . . .  10
      2.4.  Payload Info Header . . . . . . . . . . . . . . . . . . .  10
        2.4.1.  Next Header . . . . . . . . . . . . . . . . . . . . .  10
-       2.4.2.  Pad Length  . . . . . . . . . . . . . . . . . . . . .  10
-     2.5.  Payload Data  . . . . . . . . . . . . . . . . . . . . . .  10
+       2.4.2.  Pad Length  . . . . . . . . . . . . . . . . . . . . .  11
+     2.5.  Payload Data  . . . . . . . . . . . . . . . . . . . . . .  11
      2.6.  Padding (for Encryption)  . . . . . . . . . . . . . . . .  11
      2.7.  Integrity Check Value (ICV) . . . . . . . . . . . . . . .  12
      2.8.  Full and Optimized Packet Formats . . . . . . . . . . . .  12
@@ -124,22 +124,28 @@ Internet-Draft                    EESP                     December 2024
        4.2.1.  Encryption Algorithms . . . . . . . . . . . . . . . .  25
        4.2.2.  Integrity Algorithms  . . . . . . . . . . . . . . . .  25
        4.2.3.  Combined Mode Algorithms  . . . . . . . . . . . . . .  26
-     4.3.  Stateless Encryption  . . . . . . . . . . . . . . . . . .  26
-       4.3.1.  Receiving without SAD . . . . . . . . . . . . . . . .  27
-       4.3.2.  Sending without SPD . . . . . . . . . . . . . . . . .  27
-       4.3.3.  Peer Authentication Database  . . . . . . . . . . . .  27
-   5.  UDP Encapsulation . . . . . . . . . . . . . . . . . . . . . .  27
-   6.  IKEv2 Negotiation . . . . . . . . . . . . . . . . . . . . . .  28
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  28
-     7.1.  EESP IP Protocol Number . . . . . . . . . . . . . . . . .  28
-     7.2.  EESP Options Registry . . . . . . . . . . . . . . . . . .  28
-   8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  28
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  29
-   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  29
-   11. Normative References  . . . . . . . . . . . . . . . . . . . .  29
-   12. Informative References  . . . . . . . . . . . . . . . . . . .  30
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  31
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
+     4.3.  Outbound Packet Processing  . . . . . . . . . . . . . . .  26
+       4.3.1.  Security Association Lookup . . . . . . . . . . . . .  26
+       4.3.2.  Packet Encryption and Integrity Check Value (ICV)
+               Calculation . . . . . . . . . . . . . . . . . . . . .  27
+       4.3.3.  Separate Confidentiality and Integrity Algorithms . .  27
+       4.3.4.  Combined Confidentiality and Integrity Algorithms . .  28
+     4.4.  Stateless Encryption  . . . . . . . . . . . . . . . . . .  29
+       4.4.1.  Receiving without SAD . . . . . . . . . . . . . . . .  30
+       4.4.2.  Sending without SPD . . . . . . . . . . . . . . . . .  30
+       4.4.3.  Peer Authentication Database  . . . . . . . . . . . .  30
+   5.  UDP Encapsulation . . . . . . . . . . . . . . . . . . . . . .  30
+   6.  IKEv2 Negotiation . . . . . . . . . . . . . . . . . . . . . .  30
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  30
+     7.1.  EESP IP Protocol Number . . . . . . . . . . . . . . . . .  30
+     7.2.  EESP Options Registry . . . . . . . . . . . . . . . . . .  31
+   8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  31
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  32
+   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  32
+   11. Normative References  . . . . . . . . . . . . . . . . . . . .  32
+   12. Informative References  . . . . . . . . . . . . . . . . . . .  33
+   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  34
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  34
 
 1.  Introduction
 
@@ -156,12 +162,6 @@ Internet-Draft                    EESP                     December 2024
    specification of the [PSP] protocol that has the need of a Flow
    Identifier, called Network Identifier (VNI) there.  PSP also defines
    a Crypt Offset to expose parts of the headers of the inner packet.
-   EESP provides a solution for all the aforementioned use cases.
-
-   This document defines Flow Identifier and Crypt Offset Options, the
-   combination thereof along with the Session ID can be used for the PSP
-   use case.  Future documents can define the meaning of additional
-   Options for their particular use-case.  With this, all existing and
 
 
 
@@ -170,6 +170,12 @@ Klassert, et al.          Expires 15 June 2025                  [Page 3]
 Internet-Draft                    EESP                     December 2024
 
 
+   EESP provides a solution for all the aforementioned use cases.
+
+   This document defines Flow Identifier and Crypt Offset Options, the
+   combination thereof along with the Session ID can be used for the PSP
+   use case.  Future documents can define the meaning of additional
+   Options for their particular use-case.  With this, all existing and
    potential new use cases can be covered.  For instance, it can be used
    for the case of [I-D.ponchon-ipsecme-anti-replay-subspaces] or
    [I-D.he-ipsecme-vpn-shared-ipsecsa] etc., or combinations thereof.
@@ -212,12 +218,6 @@ Internet-Draft                    EESP                     December 2024
    This document uses the following terms defined in [RFC2992]: Equal-
    cost multi-path (ECMP)
 
-   This document uses the following terms defined in [RFC4303]:
-   Encapsulating Security Payload (ESP).
-
-   This document uses the following terms defined in
-   [I-D.mrossberg-ipsecme-multiple-sequence-counters]: Sub-Child SA.
-
 
 
 
@@ -225,6 +225,12 @@ Klassert, et al.          Expires 15 June 2025                  [Page 4]
 
 Internet-Draft                    EESP                     December 2024
 
+
+   This document uses the following terms defined in [RFC4303]:
+   Encapsulating Security Payload (ESP).
+
+   This document uses the following terms defined in
+   [I-D.mrossberg-ipsecme-multiple-sequence-counters]: Sub-Child SA.
 
 2.  Protocol Definition
 
@@ -269,18 +275,17 @@ Internet-Draft                    EESP                     December 2024
    addition to the IPsec peer that use it to route the packet to the
    correct Crypto context.
 
-   The 'Peer Header' follows the 'Base Header'.  The 'Peer Header' is
-   used to support replay protection and to store cryptographic
-   synchronization data, e.g., an Initialization Vector (IV) for the
-   IPsec peer.
-
-
 
 
 Klassert, et al.          Expires 15 June 2025                  [Page 5]
 
 Internet-Draft                    EESP                     December 2024
 
+
+   The 'Peer Header' follows the 'Base Header'.  The 'Peer Header' is
+   used to support replay protection and to store cryptographic
+   synchronization data, e.g., an Initialization Vector (IV) for the
+   IPsec peer.
 
    Unlike ESP, EESP does not have a trailer.  Instead, these values have
    moved to a 'Payload Info Header' directly following the 'Peer
@@ -325,11 +330,6 @@ Internet-Draft                    EESP                     December 2024
       might be used to identify the SA and to route the packet to the
       correct stateless crypto context.  For instance, it can be used to
       encode a Replay Subspace ID or, if a Key Derivation Function (KDF)
-      is used to do stateless key derivation, the crypto algorithm ID
-      could be encoded there.  The meaning of that field is opaque and
-      MAY be negotiated by IKEv2.  This document defines the use of the
-      Session ID as a Replay Subspace ID.  Other usecases are not
-      covered in this document.
 
 
 
@@ -337,6 +337,12 @@ Klassert, et al.          Expires 15 June 2025                  [Page 6]
 
 Internet-Draft                    EESP                     December 2024
 
+
+      is used to do stateless key derivation, the crypto algorithm ID
+      could be encoded there.  The meaning of that field is opaque and
+      MAY be negotiated by IKEv2.  This document defines the use of the
+      Session ID as a Replay Subspace ID.  Other usecases are not
+      covered in this document.
 
    Version  5 bits: MUST be set to zero and checked by the receiver.  If
       the version is different than an expected version number (e.g.,
@@ -381,18 +387,18 @@ Internet-Draft                    EESP                     December 2024
       (i.e., the EESP header includes the 'Payload Info Header'), set to
       1 for Optimized EESP Packet format.
 
-2.2.2.  Base Header Options
-
-   The base header 'Options' field is optional, its size is given in the
-   fixed header field 'Opt Len' and may be zero if no options are
-   present.
-
 
 
 Klassert, et al.          Expires 15 June 2025                  [Page 7]
 
 Internet-Draft                    EESP                     December 2024
 
+
+2.2.2.  Base Header Options
+
+   The base header 'Options' field is optional, its size is given in the
+   fixed header field 'Opt Len' and may be zero if no options are
+   present.
 
    When present the 'Options' field carries a variable number of type-
    length-value (TLV) encoded options.  The format of these options has
@@ -433,6 +439,17 @@ Internet-Draft                    EESP                     December 2024
    Peer Header is private to the IPsec peers, Middleboxes MUST NOT act
    upon the Peer Header fields.
 
+
+
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                  [Page 8]
+
+Internet-Draft                    EESP                     December 2024
+
+
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -442,13 +459,6 @@ Internet-Draft                    EESP                     December 2024
    |                          IV (optional)                        |
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-
-
-Klassert, et al.          Expires 15 June 2025                  [Page 8]
-
-Internet-Draft                    EESP                     December 2024
-
 
                            Figure 4: Peer Header
 
@@ -482,6 +492,20 @@ Internet-Draft                    EESP                     December 2024
    defining this for a multi-sender SA, the anti-replay features of EESP
    are not available.
 
+
+
+
+
+
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                  [Page 9]
+
+Internet-Draft                    EESP                     December 2024
+
+
 2.3.2.  Initialization Vector
 
    If the algorithm used to encrypt the payload requires cryptographic
@@ -497,14 +521,6 @@ Internet-Draft                    EESP                     December 2024
    cryptographic synchronization data, e.g., an Initialization Vector
    (IV), usually is not encrypted per se (see Table 1), although it
    sometimes is referred to as being part of the ciphertext.)
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                  [Page 9]
-
-Internet-Draft                    EESP                     December 2024
-
 
    Counter mode algorithms MAY encode the 64-bit counter of the
    Initialization Vector (IV) on the Sequence number Field.  This option
@@ -536,6 +552,16 @@ Internet-Draft                    EESP                     December 2024
    Numbers defined on the web page of the IANA (e.g., a value of 6
    indicates TCP and a value of 17 indicates UDP).
 
+
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 10]
+
+Internet-Draft                    EESP                     December 2024
+
+
 2.4.2.  Pad Length
 
    The Pad Length field indicates the number of pad bytes immediately
@@ -551,16 +577,6 @@ Internet-Draft                    EESP                     December 2024
    Payload Data is a variable-length field containing data from the
    original IP packet.  The Payload Data field is mandatory and is an
    integral number of bytes in length.
-
-
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 10]
-
-Internet-Draft                    EESP                     December 2024
-
 
    Note that the beginning of the next layer protocol header MUST be
    aligned relative to the beginning of the EESP header as follows.  For
@@ -594,6 +610,14 @@ Internet-Draft                    EESP                     December 2024
    equivalent data are included in the Payload Data covered by the
    padding computation.
 
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 11]
+
+Internet-Draft                    EESP                     December 2024
+
+
    If Padding bytes are needed but the encryption algorithm does not
    specify the padding contents, then the following default processing
    MUST be used.  The default processing follows exactly ESP as of
@@ -607,16 +631,6 @@ Internet-Draft                    EESP                     December 2024
    protection against certain forms of "cut and paste" attacks in the
    absence of other integrity measures, if the receiver checks the
    padding values upon decryption.)
-
-
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 11]
-
-Internet-Draft                    EESP                     December 2024
-
 
    If an encryption or combined mode algorithm imposes constraints on
    the values of the bytes used for padding, they MUST be specified by
@@ -651,6 +665,15 @@ Internet-Draft                    EESP                     December 2024
    have a field describing the overall size of the inner packet, so a
    pad length field is also not needed as it can be derived.
 
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 12]
+
+Internet-Draft                    EESP                     December 2024
+
+
    The packet format without the 'Payload Info Header' is called the
    "Optimized EESP packet format", while the packet format containing
    the 'Payload Info Header' is the called the "Full EESP packet
@@ -661,18 +684,6 @@ Internet-Draft                    EESP                     December 2024
    resulting packet format for use with IPv4 or IPv6 Tunnel Mode when
    the 'Payload Info Header' is elided, and Figure 7 shows the full
    header version for use in all other modes of operation.
-
-
-
-
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 12]
-
-Internet-Draft                    EESP                     December 2024
-
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -706,17 +717,6 @@ Internet-Draft                    EESP                     December 2024
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
                    Figure 6: Optimized EESP packet format
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1430,23 +1430,23 @@ Internet-Draft                    EESP                     December 2024
    must specify a (simple) formula that yields encrypted payload size,
    as a function of the plaintext payload and sequence number sizes.
 
-4.3.  Stateless Encryption
+4.3.  Outbound Packet Processing
 
-   In large-scale deployments, such as data center traffic, stateful
-   IPsec using databases outlined in [RFC4301] and [RFC4303] can become
-   a performance bottleneck.  Traditional IPsec implementations
-   typically maintain three databases: the Security Association Database
-   (SAD), the Security Policy Database (SPD), and the Peer Authorization
-   Database (PAD).  SAD and SPD are used in the data path for each
-   packet, while PAD is used to derive and/or exchange keys.
-   Additionally, both the SAD and SPD are divided into two paths: one
-   for sending and another for receiving.
+   In transport mode, the sender encapsulates the next layer protocol
+   information behind the EESP header fields, and retains the specified
+   IP header (and any IP extension headers in the IPv6 context).  In
+   tunnel mode, the outer and inner IP header/extensions can be
+   interrelated in a variety of ways.  The construction of the outer IP
+   header/extensions during the encapsulation process is described in
+   the Security Architecture document.
 
+4.3.1.  Security Association Lookup
 
-
-
-
-
+   EESP is applied to an outbound packet only after an IPsec
+   implementation determines that the packet is associated with an SA
+   that calls for EESP processing.  The process of determining what, if
+   any, IPsec processing is applied to outbound traffic is described in
+   the Security Architecture document.
 
 
 
@@ -1458,6 +1458,150 @@ Klassert, et al.          Expires 15 June 2025                 [Page 26]
 Internet-Draft                    EESP                     December 2024
 
 
+4.3.2.  Packet Encryption and Integrity Check Value (ICV) Calculation
+
+   In this section, we speak in terms of encryption always being applied
+   because of the formatting implications.  This is done with the
+   understanding that "no confidentiality" is offered by using the NULL
+   encryption algorithm (RFC 2410).  There are several algorithmic
+   options.
+
+4.3.3.  Separate Confidentiality and Integrity Algorithms
+
+   If separate confidentiality and integrity algorithms are employed,
+   the Sender proceeds as follows:
+
+   1.  Encapsulate (into the EESP Payload field):
+
+       *  for transporti, beet and payload encryption mode -- just the
+          original next layer protocol information.
+
+       *  for tunnel mode -- the entire original IP datagram.
+
+       *  XXX Add beet any payload enc mode
+
+   2.  Add any necessary encryption padding
+
+   3.  Encrypt the result using the key, encryption algorithm, and
+       algorithm mode specified for the SA and using any required
+       cryptographic synchronization data.
+
+       *  If explicit cryptographic synchronization data, e.g., an IV,
+          is indicated, it is input to the encryption algorithm per the
+          algorithm specification and placed in the Payload field.
+
+       *  If implicit cryptographic synchronization data is employed, it
+          is constructed and input to the encryption algorithm as per
+          the algorithm specification.
+
+       *  If integrity is selected, encryption is performed first,
+          before the integrity algorithm is applied, and the encryption
+          does not encompass the ICV field.  This order of processing
+          facilitates rapid detection and rejection of replayed or bogus
+          packets by the receiver, prior to decrypting the packet, hence
+          potentially reducing the impact of denial of service (DoS)
+          attacks.  It also allows for the possibility of parallel
+          processing of packets at the receiver, i.e., decryption can
+          take place in parallel with integrity checking.  Note that
+          because the ICV is not protected by encryption, a keyed
+          integrity algorithm must be employed to compute the ICV.
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 27]
+
+Internet-Draft                    EESP                     December 2024
+
+
+   4.  Compute the ICV over the EESP packet minus the ICV field.  Thus,
+       the ICV computation encompasses the, base header including any
+       options (if present), SPI, Sequence Number (if present), IV (if
+       present), Payload Info Header (if present), Payload Data and
+       Padding (if present).
+
+   For some integrity algorithms, the byte string over which the ICV
+   computation is performed must be a multiple of a block size specified
+   by the algorithm.  If the length of EESP packet (as described above)
+   does not match the block size requirements for the algorithm,
+   implicit padding MUST be appended to the end of the EESP packet.
+   (This padding is added after the Payload field) The block size (and
+   hence the length of the padding) is specified by the integrity
+   algorithm specification.
+
+   NOTE: This needs review!!! This padding is not transmitted with the
+   packet.  The document that defines an integrity algorithm MUST be
+   consulted to determine if implicit padding is required as described
+   above.  If the document does not specify an answer to this question,
+   then the default is to assume that implicit padding is required (as
+   needed to match the packet length to the algorithm's block size.)  If
+   padding bytes are needed but the algorithm does not specify the
+   padding contents, then the padding octets MUST have a value of zero.
+
+4.3.4.  Combined Confidentiality and Integrity Algorithms
+
+   If a combined confidentiality/integrity algorithm is employed, the
+   Sender proceeds as follows:
+
+   1.  Encapsulate into the ESP Payload Data field:
+
+       *  for transport, beet and payload encryption mode -- just the
+          original next layer protocol information.
+
+       *  for tunnel mode -- the entire original IP datagram.
+
+   2.  Add any necessary (encryption) Padding.
+
+   3.  Encrypt and integrity protect the result using the key and
+       combined mode algorithm specified for the SA and using any
+       required cryptographic synchronization data.
+
+       *  If explicit cryptographic synchronization data, e.g., an IV,
+          is indicated, it is input to the combined mode algorithm per
+          the algorithm specification and placed in the IV field of the
+          peer header.
+
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 28]
+
+Internet-Draft                    EESP                     December 2024
+
+
+       *  If implicit cryptographic synchronization data is employed, it
+          is constructed and input to the encryption algorithm as per
+          the algorithm specification.
+
+       *  The Sequence Number (if present) and the SPI are inputs to the
+          algorithm, as they must be included in the integrity check
+          computation.  The means by which these values are included in
+          this computation are a function of the combined mode algorithm
+          employed and thus not specified in this standard.
+
+       *  The (explicit) ICV field MAY be a part of the ESP packet
+          format when a combined mode algorithm is employed.  If one is
+          not used, an analogous field usually will be a part of the
+          ciphertext payload.  The location of any integrity fields, and
+          the means by which the Sequence Number and SPI are included in
+          the integrity computation, MUST be defined in an RFC that
+          defines the use of the combined mode algorithm with EESP.
+          NOTE STK: Do we need to update RFC4106, RFC 4543, RFC 6054
+          etc.?
+
+4.4.  Stateless Encryption
+
+   In large-scale deployments, such as data center traffic, stateful
+   IPsec using databases outlined in [RFC4301] and [RFC4303] can become
+   a performance bottleneck.  Traditional IPsec implementations
+   typically maintain three databases: the Security Association Database
+   (SAD), the Security Policy Database (SPD), and the Peer Authorization
+   Database (PAD).  SAD and SPD are used in the data path for each
+   packet, while PAD is used to derive and/or exchange keys.
+   Additionally, both the SAD and SPD are divided into two paths: one
+   for sending and another for receiving.
+
    A high data rate, combined with frequent changes in the SAD and SPD,
    can slow down the system.  As the data flow increases, adding and
    removing entries in the control plane creates locking issues and
@@ -1468,7 +1612,21 @@ Internet-Draft                    EESP                     December 2024
    noticeable in high-speed data paths, where delays from locking can
    severely affect performance.
 
-4.3.1.  Receiving without SAD
+
+
+
+
+
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 29]
+
+Internet-Draft                    EESP                     December 2024
+
+
+4.4.1.  Receiving without SAD
 
    When using Stateless Encryption, implementations can bypass the
    monolithic SAD in the receiving path.  Using fields from the EESP
@@ -1487,14 +1645,14 @@ Internet-Draft                    EESP                     December 2024
    or handled asynchronously, further optimizing performance in high-
    throughput environments like large data centers.
 
-4.3.2.  Sending without SPD
+4.4.2.  Sending without SPD
 
    The sending-side Security Policy and symetric key can be associated
    with a local socket or route instead of a monolithic SPD and SAD.  A
    send call could preappend crypto parameters for stateless encryption
    and encapsulation in hardware to plain text data.
 
-4.3.3.  Peer Authentication Database
+4.4.3.  Peer Authentication Database
 
    The data path does not use the PAD, but it is used for key
    derivation.  The Key Derivation Function (KDF) is outside the scope
@@ -1504,15 +1662,6 @@ Internet-Draft                    EESP                     December 2024
 5.  UDP Encapsulation
 
    TBD
-
-
-
-
-
-Klassert, et al.          Expires 15 June 2025                 [Page 27]
-
-Internet-Draft                    EESP                     December 2024
-
 
 6.  IKEv2 Negotiation
 
@@ -1524,6 +1673,14 @@ Internet-Draft                    EESP                     December 2024
 
    This document requests IANA allocate an IP protocol number from
    "Protocol Numbers - Assigned Internet Protocol Numbers" registry
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 30]
+
+Internet-Draft                    EESP                     December 2024
+
 
    *  Decimal: TBD
 
@@ -1565,7 +1722,18 @@ Internet-Draft                    EESP                     December 2024
 
 
 
-Klassert, et al.          Expires 15 June 2025                 [Page 28]
+
+
+
+
+
+
+
+
+
+
+
+Klassert, et al.          Expires 15 June 2025                 [Page 31]
 
 Internet-Draft                    EESP                     December 2024
 
@@ -1621,7 +1789,7 @@ Internet-Draft                    EESP                     December 2024
 
 
 
-Klassert, et al.          Expires 15 June 2025                 [Page 29]
+Klassert, et al.          Expires 15 June 2025                 [Page 32]
 
 Internet-Draft                    EESP                     December 2024
 
@@ -1677,7 +1845,7 @@ Internet-Draft                    EESP                     December 2024
 
 
 
-Klassert, et al.          Expires 15 June 2025                 [Page 30]
+Klassert, et al.          Expires 15 June 2025                 [Page 33]
 
 Internet-Draft                    EESP                     December 2024
 
@@ -1733,4 +1901,4 @@ Authors' Addresses
 
 
 
-Klassert, et al.          Expires 15 June 2025                 [Page 31]
+Klassert, et al.          Expires 15 June 2025                 [Page 34]
