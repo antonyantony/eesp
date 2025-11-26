@@ -1526,6 +1526,9 @@ middlebox use.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.4">
                 <p id="section-toc.1-1.9.2.4.1"><a href="#section-9.4" class="auto internal xref">9.4</a>.  <a href="#name-too-many-optional-headers" class="internal xref">Too Many Optional Headers</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.5">
+                <p id="section-toc.1-1.9.2.5.1"><a href="#section-9.5" class="auto internal xref">9.5</a>.  <a href="#name-new-sub-sa-key-derivation-f" class="internal xref">New Sub SA Key Derivation Function</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
@@ -3581,6 +3584,17 @@ the IV is current time.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 optional headers may lead to resource exhaustion on intermediate
 routers or the receiving peer. Implementations SHOULD avoid attaching
 an excessive number of optional headers to a single packet.<a href="#section-9.4-1" class="pilcrow">¶</a></p>
+</section>
+<section id="section-9.5">
+        <h3 id="name-new-sub-sa-key-derivation-f">
+<a href="#section-9.5" class="section-number selfRef">9.5. </a><a href="#name-new-sub-sa-key-derivation-f" class="section-name selfRef">New Sub SA Key Derivation Function</a>
+        </h3>
+<p id="section-9.5-1">This draft introduces a new key derivation procedure for Sub-SAs
+(<a href="#sec-key-derivation-for-sub-sas" class="auto internal xref">Section 5</a>). Any new cryptographic construction
+requires review to ensure that the Sub-SA Key Derivation Function (SSKDF)
+provides appropriate secrecy, independence between Sub-SAs, and resistance
+to key-recovery or cross-SA attacks. A dedicated cryptographic review of
+the SSKDF is therefore RECOMMENDED.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
 </section>
 </section>
 <section id="section-10">

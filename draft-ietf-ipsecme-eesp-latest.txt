@@ -145,8 +145,9 @@ Internet-Draft                    EESP                     November 2025
      9.2.  Using Crypt Offset  . . . . . . . . . . . . . . . . . . .  40
      9.3.  Optional Disabling of Replay Protection . . . . . . . . .  40
      9.4.  Too Many Optional Headers . . . . . . . . . . . . . . . .  40
+     9.5.  New Sub SA Key Derivation Function  . . . . . . . . . . .  40
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  40
-     10.1.  EESP IP Protocol Number  . . . . . . . . . . . . . . . .  40
+     10.1.  EESP IP Protocol Number  . . . . . . . . . . . . . . . .  41
      10.2.  EESP Versions Registry . . . . . . . . . . . . . . . . .  41
      10.3.  EESP Options Registry  . . . . . . . . . . . . . . . . .  41
    11. Implementation Status . . . . . . . . . . . . . . . . . . . .  42
@@ -155,7 +156,6 @@ Internet-Draft                    EESP                     November 2025
    14. Informative References  . . . . . . . . . . . . . . . . . . .  43
    Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  45
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  45
-
 
 
 
@@ -2220,7 +2220,27 @@ Internet-Draft                    EESP                     November 2025
    routers or the receiving peer.  Implementations SHOULD avoid
    attaching an excessive number of optional headers to a single packet.
 
+9.5.  New Sub SA Key Derivation Function
+
+   This draft introduces a new key derivation procedure for Sub-SAs
+   (Section 5).  Any new cryptographic construction requires review to
+   ensure that the Sub-SA Key Derivation Function (SSKDF) provides
+   appropriate secrecy, independence between Sub-SAs, and resistance to
+   key-recovery or cross-SA attacks.  A dedicated cryptographic review
+   of the SSKDF is therefore RECOMMENDED.
+
 10.  IANA Considerations
+
+
+
+
+
+
+
+Klassert, et al.           Expires 30 May 2026                 [Page 40]
+
+Internet-Draft                    EESP                     November 2025
+
 
 10.1.  EESP IP Protocol Number
 
@@ -2234,13 +2254,6 @@ Internet-Draft                    EESP                     November 2025
    *  Protocol: Enhanced Encapsulating Security Payload
 
    *  Reference: This document
-
-
-
-Klassert, et al.           Expires 30 May 2026                 [Page 40]
-
-Internet-Draft                    EESP                     November 2025
-
 
 10.2.  EESP Versions Registry
 
@@ -2277,6 +2290,14 @@ Internet-Draft                    EESP                     November 2025
 
    The initial content for this registry is as follows:
 
+
+
+
+Klassert, et al.           Expires 30 May 2026                 [Page 41]
+
+Internet-Draft                    EESP                     November 2025
+
+
    Value     EESP Header Options Types         Reference
    -------   ------------------------------    ---------------
          0   Pad1                              [this document]
@@ -2287,16 +2308,6 @@ Internet-Draft                    EESP                     November 2025
    224-255   Private                           [this document]
 
                      Figure 22: Initial Registry Values
-
-
-
-
-
-
-Klassert, et al.           Expires 30 May 2026                 [Page 41]
-
-Internet-Draft                    EESP                     November 2025
-
 
 11.  Implementation Status
 
@@ -2333,6 +2344,16 @@ Internet-Draft                    EESP                     November 2025
 
 13.  Normative References
 
+
+
+
+
+
+Klassert, et al.           Expires 30 May 2026                 [Page 42]
+
+Internet-Draft                    EESP                     November 2025
+
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -2345,14 +2366,6 @@ Internet-Draft                    EESP                     November 2025
    [RFC4303]  Kent, S., "IP Encapsulating Security Payload (ESP)",
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <https://www.rfc-editor.org/info/rfc4303>.
-
-
-
-
-Klassert, et al.           Expires 30 May 2026                 [Page 42]
-
-Internet-Draft                    EESP                     November 2025
-
 
    [RFC4494]  Song, JH., Poovendran, R., and J. Lee, "The AES-CMAC-96
               Algorithm and Its Use with IPsec", RFC 4494,
@@ -2383,6 +2396,20 @@ Internet-Draft                    EESP                     November 2025
 
 14.  Informative References
 
+
+
+
+
+
+
+
+
+
+Klassert, et al.           Expires 30 May 2026                 [Page 43]
+
+Internet-Draft                    EESP                     November 2025
+
+
    [I-D.he-ipsecme-vpn-shared-ipsecsa]
               He, Q., Pan, W., Chen, X., and B. Ding, "Shared Use of
               IPsec Tunnel in a Multi-VPN Environment", Work in
@@ -2402,14 +2429,6 @@ Internet-Draft                    EESP                     November 2025
    [I-D.ponchon-ipsecme-anti-replay-subspaces]
               Ponchon, P., Shaikh, M., Dernaika, H., Pfister, P., and G.
               Solignac, "IPsec and IKE anti-replay sequence number
-
-
-
-Klassert, et al.           Expires 30 May 2026                 [Page 43]
-
-Internet-Draft                    EESP                     November 2025
-
-
               subspaces for traffic-engineered paths and multi-core
               processing", Work in Progress, Internet-Draft, draft-
               ponchon-ipsecme-anti-replay-subspaces-03, 23 October 2023,
@@ -2439,6 +2458,14 @@ Internet-Draft                    EESP                     November 2025
               RFC 3948, DOI 10.17487/RFC3948, January 2005,
               <https://www.rfc-editor.org/info/rfc3948>.
 
+
+
+
+Klassert, et al.           Expires 30 May 2026                 [Page 44]
+
+Internet-Draft                    EESP                     November 2025
+
+
    [RFC4106]  Viega, J. and D. McGrew, "The Use of Galois/Counter Mode
               (GCM) in IPsec Encapsulating Security Payload (ESP)",
               RFC 4106, DOI 10.17487/RFC4106, June 2005,
@@ -2458,13 +2485,6 @@ Internet-Draft                    EESP                     November 2025
               Code: The Implementation Status Section", BCP 205,
               RFC 7942, DOI 10.17487/RFC7942, July 2016,
               <https://www.rfc-editor.org/info/rfc7942>.
-
-
-
-Klassert, et al.           Expires 30 May 2026                 [Page 44]
-
-Internet-Draft                    EESP                     November 2025
-
 
    [RFC8750]  Migault, D., Guggemos, T., and Y. Nir, "Implicit
               Initialization Vector (IV) for Counter-Based Ciphers in
@@ -2491,26 +2511,6 @@ Authors' Addresses
    Christian Hopps
    LabN Consulting, L.L.C.
    Email: chopps@chopps.org
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
